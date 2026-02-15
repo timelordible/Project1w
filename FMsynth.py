@@ -1,7 +1,6 @@
 # TODO: Replace the code below with your implementation of a FM synthesis
 # Hint: You should really be doing PM.
 def fm_synth(carrier_type, carrier_freq, mod_index, mod_ratio, dur, fs=44100, amp=1, modulator_type='sine'):
-    """
     Args:
     carrier_type (str) = carrier waveform type: 'sine', 'square', 'saw', or 'triangle'
     carrier_freq (float) = frequency of carrier in Hz
