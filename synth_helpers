@@ -7,6 +7,7 @@ from scipy import signal
 # Hint: You may want to write more helper functions to create the waveforms
 # Note: How will you handle aliasing?
 def gen_wave(type, freq, dur, fs=44100, amp=1, phi=0):
+  def gen_wave(type, freq, dur, fs=44100, amp=1, phi=0):
     """
     Args:
     type (str) = waveform type: 'sine', 'square', 'saw', or 'triangle'
@@ -19,21 +20,46 @@ def gen_wave(type, freq, dur, fs=44100, amp=1, phi=0):
     The function should return a numpy array
     wave (numpy array) = The generated waveform
     """
+        
+    t = np.arange(0, dur, 1/fs) # Time vector length (used for zeros_like safety)
+
+
+    if freq <= 0:
+        return np.zeros(len(t)) #for error
+
+   
+    nyquist = fs / 2
+    max_harmonic = int(nyquist // freq)  # Nyquist limit for aliasing control
   
     wave = np.array([])
 
     if type == 'sine':
         # create sinusoid
-        wave = amp * np.sin(2*np.pi*freq*np.arange(0,dur,1/fs) + phi)
+        wave = genSine(freq, dur, amp, phi, fs)
     elif type == 'saw':
         # create saw
-        wave = np.array([])
+        wave = np.zeros_like(t)
+        for k in range(1, max_harmonic + 1):
+            harmonic = genSine(k * freq, dur, 1/k, phi, fs)
+            wave += ((-1)**(k+1)) * harmonic
+        wave = (2 / np.pi) * amp * wave
+
     elif type == 'square':
         # create square
-        wave = np.array([])
+        wave = np.zeros_like(t)
+        for k in range(1, max_harmonic + 1, 2):
+            harmonic = genSine(k * freq, dur, 1/k, phi, fs)
+            wave += harmonic
+        wave = (4 / np.pi) * amp * wave
+         
     elif type == 'triangle':
         # create triangle
-        wave = np.array([])
+        wave = np.zeros_like(t)
+        for k in range(1, max_harmonic + 1, 2):
+            sign = (-1) ** ((k - 1) // 2)
+            harmonic = genSine(k * freq, dur, 1/(k**2), phi, fs)
+            wave += sign * harmonic
+        wave = (8 / (np.pi**2)) * amp * wave
     return wave
     
 
@@ -133,16 +159,42 @@ def reverb(data, ir, dry_wet=0.5):
     return sig
 
 def delay(data, delay_time, dry_wet=0.5, fs=44100):
-    """
-    Args:
-    data (np.array) = signal to be modified
-    delay_time (float) = delay time in seconds
-    dry_wet (float) = value between 0-1 dry/wet balance
-    fs (float) = sampling frequency of the sinusoid in Hz
+ # Number of repeats (echo taps)
+    repeats = 3
 
-    Returns:
-    The function should return a numpy array
-    sig (numpy array) = signal with a delay
-    """
-    sig = data
+    # Convert delay time (seconds) to milliseconds logic like your notebook
+    offset_ms = delay_time * 1000
+    offset_samples = int(fs / 1000 * offset_ms)
+
+    # Safety check
+    if offset_samples <= 0 or len(data) == 0:
+        return data
+
+    # Create output buffer long enough to hold echoes
+    total_length = len(data) + offset_samples * repeats
+    sig = np.zeros(total_length)
+
+    # Add original (dry signal)
+    sig[:len(data)] += data * (1 - dry_wet)
+
+    # Create repeated delayed copies using a FOR LOOP (like your screenshot)
+    for i in range(1, repeats + 1):
+        # Each repeat gets quieter (classic echo decay)
+        decay = (dry_wet) ** i
+
+        # Create padding before the delayed copy
+        pad_beg = np.zeros(offset_samples * i)
+        pad_end = np.zeros(total_length - len(data) - offset_samples * i)
+
+        # Shifted (delayed) version of the signal
+        delayed_copy = np.concatenate([pad_beg, data * decay, pad_end])
+
+        # Add to output signal
+        sig += delayed_copy
+
+    # Normalize to prevent clipping
+    max_val = np.max(np.abs(sig))
+    if max_val > 1:
+        sig = sig / max_val
+
     return sig
