@@ -10,18 +10,15 @@ def fm_synth(carrier_type, carrier_freq, mod_index, mod_ratio, dur, fs=44100, am
         raise ValueError("carrier_freq must be >= 0")
     if mod_ratio < 0:
         raise ValueError("mod_ratio must be >= 0")
-    if carrier_type not 'sine', 'triangle', 'saw', 'square'
-        raise ValueError("carrier_type must be sine, square, saw, or triangle')
+    if carrier_type not in ['sine', 'triangle', 'saw', 'square']:
+        raise ValueError("carrier_type must be sine, square, saw, or triangle")
 
     mod_freq = (carrier_freq * mod_ratio)
     I = mod_index
-
     time_arr = np.arange(0, dur, 1/fs)
     modulator = np.sin(2*np.pi * mod_freq * time_arr)
 
-    sig = (np.sin((2*np.pi * carrier_freq * time_arr) + (I * modulator))
-
-    sig = gen_wave(carrier_type, carrier_freq, dur, fs=fs)
+    sig = np.sin((2*np.pi * carrier_freq * time_arr) + (I * modulator)) * amp
     return sig
 
     '''
