@@ -5,7 +5,7 @@ def fm_synth(carrier_type, carrier_freq, mod_index, mod_ratio, dur, fs=44100, am
     carrier_type (str) = carrier waveform type: 'sine', 'square', 'saw', or 'triangle'
     carrier_freq (float) = frequency of carrier in Hz
     mod_index (float) = index of modulation
-    mod_ratio (float) = modulation ratio, where modulator frequency = carrier_freq * mod_ratio
+    mod_ratio (float) = modulator frequency = carrier_freq * mod_ratio 
     dur (float) = duration of the sinusoid (in seconds)
     fs (float) = sampling frequency of the sinusoid in Hz
     amp (float) = amplitude of the carrier
@@ -14,6 +14,14 @@ def fm_synth(carrier_type, carrier_freq, mod_index, mod_ratio, dur, fs=44100, am
     Returns:
     The function should return a numpy array
     sig (numpy array) = frequency modulated signal
-    """
+    
     sig = gen_wave(carrier_type, carrier_freq, dur, fs=fs)
     return sig
+
+
+    def fmSynth(carrier_freq, mod_freq, index, dur, fs=44100):
+    time_arr = np.arange(0, dur, 1/fs)
+    modulator = np.sin(2*np.pi * mod_freq * time_arr)
+
+    return np.sin((2*np.pi * carrier_freq * time_arr) + (index * modulator))
+
