@@ -6,6 +6,11 @@ from scipy import signal
 # TODO: Replace the code below with your implementation of the waveforms.
 # Hint: You may want to write more helper functions to create the waveforms
 # Note: How will you handle aliasing?
+def genSine(f, dur=1, amp=1.0, phase=0, fs=44100):
+    t = np.arange(0, dur, 1/fs)
+    aSin = amp * np.sin(2*np.pi * f * t + phase)
+    return aSin
+
 def gen_wave(type, freq, dur, fs=44100, amp=1, phi=0):
     """
     Args:
@@ -134,25 +139,25 @@ def am_synth(carrier_type, carrier_freq, mod_depth, mod_ratio, dur, fs=44100, am
     time_arr = np.arange(0, dur, 1/fs)
     
     if modulator_type.casefold() == 'sine':
-        mod = np.sin(np.pi*2 * mod_freq * time_arr)
+        mod = signal.sin(np.pi*2 * mod_freq * time_arr)
     elif modulator_type.casefold() == 'square':
-        mod = np.square(2*np.pi * mod_freq * time_arr)
+        mod = signal.square(2*np.pi * mod_freq * time_arr)
     elif modulator_type.casefold() == 'saw':
-        mod = np.saw(2*np.pi * mod_freq * time_arr)
+        mod = signal.sawtooth(2*np.pi * mod_freq * time_arr)
     elif modulator_type.casefold() == 'triangle':
-        mod = np.tri(2*np.pi * mod_freq * time_arr, width=0.5)
+        mod = signal.sawtooth(2*np.pi * mod_freq * time_arr, width=0.5)
     else:
         print('Please enter sine, square, saw, or tri for modulator wave type')
         return None
 
     if carrier_type.casefold() == 'sine':
-        carrier = np.sin(np.pi*2 * carrier_freq * time_arr)
+        carrier = signal.sin(np.pi*2 * carrier_freq * time_arr)
     elif carrier_type.casefold() == 'square':
-        carrier = np.square(2*np.pi * carrier_freq * time_arr)
+        carrier = signal.square(2*np.pi * carrier_freq * time_arr)
     elif carrier_type.casefold() == 'saw':
-        carrier = np.saw(2*np.pi * carrier_freq * time_arr)
+        carrier = signal.sawtooth(2*np.pi * carrier_freq * time_arr)
     elif carrier_type.casefold() == 'triangle':
-        carrier = np.tri(2*np.pi * carrier_freq * time_arr, width=0.5)
+        carrier = signal.sawtooth(2*np.pi * carrier_freq * time_arr, width=0.5)
     else:
         print('Please enter sine, square, saw, or tri for carrier wave type')
         return None
