@@ -7,7 +7,6 @@ from scipy import signal
 # Hint: You may want to write more helper functions to create the waveforms
 # Note: How will you handle aliasing?
 def gen_wave(type, freq, dur, fs=44100, amp=1, phi=0):
-  def gen_wave(type, freq, dur, fs=44100, amp=1, phi=0):
     """
     Args:
     type (str) = waveform type: 'sine', 'square', 'saw', or 'triangle'
@@ -137,11 +136,11 @@ def am_synth(carrier_type, carrier_freq, mod_depth, mod_ratio, dur, fs=44100, am
     if modulator_type.casefold() == 'sine':
         mod = np.sin(np.pi*2 * mod_freq * time_arr)
     elif modulator_type.casefold() == 'square':
-        mod = square(2*np.pi * mod_freq * time_arr)
+        mod = np.square(2*np.pi * mod_freq * time_arr)
     elif modulator_type.casefold() == 'saw':
-        mod = saw(2*np.pi * mod_freq * time_arr)
+        mod = np.saw(2*np.pi * mod_freq * time_arr)
     elif modulator_type.casefold() == 'triangle':
-        mod = tri(2*np.pi * mod_freq * time_arr, width=0.5)
+        mod = np.tri(2*np.pi * mod_freq * time_arr, width=0.5)
     else:
         print('Please enter sine, square, saw, or tri for modulator wave type')
         return None
@@ -149,11 +148,11 @@ def am_synth(carrier_type, carrier_freq, mod_depth, mod_ratio, dur, fs=44100, am
     if carrier_type.casefold() == 'sine':
         carrier = np.sin(np.pi*2 * carrier_freq * time_arr)
     elif carrier_type.casefold() == 'square':
-        carrier = square(2*np.pi * carrier_freq * time_arr)
+        carrier = np.square(2*np.pi * carrier_freq * time_arr)
     elif carrier_type.casefold() == 'saw':
-        carrier = saw(2*np.pi * carrier_freq * time_arr)
+        carrier = np.saw(2*np.pi * carrier_freq * time_arr)
     elif carrier_type.casefold() == 'triangle':
-        carrier = tri(2*np.pi * carrier_freq * time_arr, width=0.5)
+        carrier = np.tri(2*np.pi * carrier_freq * time_arr, width=0.5)
     else:
         print('Please enter sine, square, saw, or tri for carrier wave type')
         return None
@@ -182,32 +181,18 @@ def filter(data, type, cutoff_freq, fs=44100, order=5):
     return sig
 
 def reverb(data, ir, dry_wet=0.5):
+    """
+    Args:
+    data (np.array) = signal to be modified
+    ir (str) = file path to impulse response
+    dry_wet (float) = value between 0-1 dry/wet balance
 
-    ir_fs, ir_data = read(ir)
-
-    # If IR is stereo, convert to mono
-    if len(ir_data.shape) > 1:
-        ir_data = ir_data.mean(axis=1)
-
-    # Normalize IR to prevent crazy volume spikes
-    ir_data = ir_data / (np.max(np.abs(ir_data)) + 1e-9)
-
-    # Normalize input signal and convulve
-    data = data / (np.max(np.abs(data)) + 1e-9)
-    wet = np.convolve(data, ir_data)
-    wet = wet[:len(data)]
-
-    # Dry/Wet mix
-    sig = (1 - dry_wet) * data + dry_wet * wet
-
-    # avoid clipping
-    max_val = np.max(np.abs(sig))
-    if max_val > 1:
-        sig = sig / max_val
-
-
+    Returns:
+    The function should return a numpy array
+    sig (numpy array) = signal with reverb
+    """
+    sig = data
     return sig
-
 
 def delay(data, delay_time, dry_wet=0.5, fs=44100):
  # Number of repeats (echo taps)
