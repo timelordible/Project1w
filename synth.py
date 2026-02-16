@@ -124,10 +124,15 @@ def params_CLI():
             print("2 - AM")
             print("3 - None")
 
-        if mod == 1 or mod == 2:
+        if mod == 1:
             mod_index = float(input("Set modulation index: "))
             mod_ratio = float(input("Set modulator harmonicity ratio: "))
             synth_params['mod_index'] = mod_index
+            synth_params['mod_ratio'] = mod_ratio
+        elif mod == 2:
+            mod_depth = float(input("Set modulation depth: "))
+            mod_ratio = float(input("Set modulator harmonicity ratio: "))
+            synth_params['mod_depth'] = mod_depth
             synth_params['mod_ratio'] = mod_ratio
         
         # ADSR
@@ -164,7 +169,8 @@ def gen_note(freq, dur, amp, synth_params):
     if modulation == 'fm':
         note = synth_helpers.fm_synth(osc_type, freq, mod_index, mod_ratio, dur, fs=fs, amp=amp)
     elif modulation == 'am':
-        note = synth_helpers.am_synth(osc_type, freq, mod_index, mod_ratio, dur, fs=fs, amp=amp)
+        mod_depth = synth_params['mod_depth']
+        note = synth_helpers.am_synth(osc_type, freq, mod_depth, mod_ratio, dur, fs=fs, amp=amp)
     else:
         note = synth_helpers.gen_wave(osc_type, freq, dur, fs=fs, amp=amp)
 
