@@ -49,3 +49,4 @@ def am_synth(carrier_type, carrier_freq, mod_depth, mod_ratio, dur, fs=44100, am
     sig (numpy array) = amplitude modulated signal
 
      sig = gen_wave(carrier_type, carrier_freq, dur, fs=fs, am)
+    """
