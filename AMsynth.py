@@ -2,8 +2,23 @@
 def am_synth(carrier_type, carrier_freq, mod_depth, mod_ratio, dur, fs=44100, amp=1, modulator_type='sine'):
 
 
-  out = 
-    sig = gen_wave(carrier_type, carrier_freq, dur, fs=fs)
+mod_freq = carrier_freq/mod_ratio
+
+time_arr = np.arange(0, dur, 1/fs)
+    if mod_type.casefold() == 'sine':
+        mod = np.sin(np.pi*2 * mod_freq * time_arr)
+    elif mod_type.casefold() == 'square':
+        mod = square(2*np.pi * mod_freq * time_arr)
+    elif mod_type.casefold() == 'saw':
+        mod = saw(2*np.pi * mod_freq * time_arr)
+    elif mod_type.casefold() == 'tri':
+        mod = saw(2*np.pi * mod_freq * time_arr, width=0.5)
+    else:
+        print('Please enter sine, square, saw, or tri for modulator wave type')
+        return None
+  
+    am = (mod_depth * mod)
+    sig = gen_wave(carrier_type, carrier_freq, dur, fs=fs, am)
     return sig
 
 
