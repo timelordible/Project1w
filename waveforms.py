@@ -17,19 +17,6 @@ def genSine(f=None, dur=1, A=1, phi=0, fs=44100):
 # Hint: You may want to write more helper functions to create the waveforms
 # Note: How will you handle aliasing?
 def gen_wave(type, freq, dur, fs=44100, amp=1, phi=0):
-    """
-    Args:
-    type (str) = waveform type: 'sine', 'square', 'saw', or 'triangle'
-    freq (float) = fundamental frequency in Hz
-    dur (float) = duration of the sinusoid (in seconds)
-    fs (float) = sampling frequency of the sinusoid in Hz
-    amp (float) = amplitude of the fundamental
-    phi (float) = initial phase of the wave in radians
-    Returns:
-    The function should return a numpy array
-    wave (numpy array) = The generated waveform
-    """
-        
     t = np.arange(0, dur, 1/fs) # Time vector length (used for zeros_like safety)
 
 
