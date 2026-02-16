@@ -22,7 +22,7 @@ def parse_midi():
     for note in instrument.notes:
         pitch = note.pitch
         freq = 440 * 2**((pitch-69)/12)
-        dur = note.duration
+        dur = note.end - note.start
         vel = note.velocity
         amp = vel/127
         midi_notes.append((freq, dur, amp))
@@ -198,7 +198,11 @@ def synth(note_list, synth_params):
         amp = note[2]
         synth_note = gen_note(freq, dur, amp, synth_params)
         note_samples = len(synth_note)
-        song[current_sample:current_sample+note_samples] += synth_note
+        end = min(current_sample + note_samples, len(song))
+        chunk_len = end - current_sample
+        if chunk_len > 0:
+            song[current_sample:end] += synth_note[:chunk_len]
+
         current_sample += note_samples
 
     song = song[:current_sample]
