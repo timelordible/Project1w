@@ -58,7 +58,7 @@ def params_CLI():
 
     print("\nChoose a playback mode:")
     print("1 - Preset 1: Echoes")
-    print("2 - Preset 2: MyPresetName")
+    print("2 - Preset 2: Staccato")
     print("3 - Custom sound")
     mode = int(input("> "))
 
@@ -82,7 +82,7 @@ def params_CLI():
         synth_params['mod_ratio'] = 3
         synth_params['mod_index'] = 4
         synth_params['delay'] = False
-        synth_params['adsr'] = (10, 10, 0.8, 10)
+        synth_params['adsr'] = (10, 10, 0.2, 10)
 
     elif mode == 3:
 
