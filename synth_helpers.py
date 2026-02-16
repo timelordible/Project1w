@@ -182,18 +182,32 @@ def filter(data, type, cutoff_freq, fs=44100, order=5):
     return sig
 
 def reverb(data, ir, dry_wet=0.5):
-    """
-    Args:
-    data (np.array) = signal to be modified
-    ir (str) = file path to impulse response
-    dry_wet (float) = value between 0-1 dry/wet balance
 
-    Returns:
-    The function should return a numpy array
-    sig (numpy array) = signal with reverb
-    """
-    sig = data
+    ir_fs, ir_data = read(ir)
+
+    # If IR is stereo, convert to mono
+    if len(ir_data.shape) > 1:
+        ir_data = ir_data.mean(axis=1)
+
+    # Normalize IR to prevent crazy volume spikes
+    ir_data = ir_data / (np.max(np.abs(ir_data)) + 1e-9)
+
+    # Normalize input signal and convulve
+    data = data / (np.max(np.abs(data)) + 1e-9)
+    wet = np.convolve(data, ir_data)
+    wet = wet[:len(data)]
+
+    # Dry/Wet mix
+    sig = (1 - dry_wet) * data + dry_wet * wet
+
+    # avoid clipping
+    max_val = np.max(np.abs(sig))
+    if max_val > 1:
+        sig = sig / max_val
+
+
     return sig
+
 
 def delay(data, delay_time, dry_wet=0.5, fs=44100):
  # Number of repeats (echo taps)
