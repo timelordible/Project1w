@@ -22,7 +22,7 @@ def parse_midi():
     for note in instrument.notes:
         pitch = note.pitch
         freq = 440 * 2**((pitch-69)/12)
-        dur = note.duration
+        dur = note.end - note.start
         vel = note.velocity
         amp = vel/127
         midi_notes.append((freq, dur, amp))
