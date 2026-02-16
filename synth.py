@@ -57,30 +57,32 @@ def params_CLI():
     synth_params['fs'] = int(input("Output sample rate (max 48000): "))
 
     print("\nChoose a playback mode:")
-    print("1 - Preset 1: MyPresetName")
+    print("1 - Preset 1: Echoes")
     print("2 - Preset 2: MyPresetName")
     print("3 - Custom sound")
     mode = int(input("> "))
 
     if mode == 1:
-        # TODO: UPDATE WITH YOUR PRESET PARAMS
-
+        # echoes preset
         synth_params['osc_type'] = 'sine'
         synth_params['modulation'] = 'none'
         synth_params['mod_ratio'] = 0
         synth_params['mod_index'] = 0
-        synth_params['reverb'] = False
+        synth_params['delay'] = True
+        synth_params['delay_time'] = 0.4
+        synth_params['dry_wet'] = 0.6
+        synth_params['reverb'] = True
         synth_params['adsr'] = (60, 20, 0.8, 20)
     
     elif mode == 2:
-        # TODO: UPDATE WITH YOUR PRESET PARAMS
+        # staccato
 
-        synth_params['osc_type'] = 'sine'
-        synth_params['modulation'] = 'none'
-        synth_params['mod_ratio'] = 0
-        synth_params['mod_index'] = 0
-        synth_params['reverb'] = False
-        synth_params['adsr'] = (50, 10, 0.8, 10)
+        synth_params['osc_type'] = 'saw'
+        synth_params['modulation'] = 'AM'
+        synth_params['mod_ratio'] = 3
+        synth_params['mod_index'] = 4
+        synth_params['delay'] = False
+        synth_params['adsr'] = (10, 10, 0.8, 10)
 
     elif mode == 3:
 

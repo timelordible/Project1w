@@ -139,7 +139,7 @@ def am_synth(carrier_type, carrier_freq, mod_depth, mod_ratio, dur, fs=44100, am
     time_arr = np.arange(0, dur, 1/fs)
     
     if modulator_type.casefold() == 'sine':
-        mod = signal.sin(np.pi*2 * mod_freq * time_arr)
+        mod = np.sin(np.pi*2 * mod_freq * time_arr)
     elif modulator_type.casefold() == 'square':
         mod = signal.square(2*np.pi * mod_freq * time_arr)
     elif modulator_type.casefold() == 'saw':
@@ -151,7 +151,7 @@ def am_synth(carrier_type, carrier_freq, mod_depth, mod_ratio, dur, fs=44100, am
         return None
 
     if carrier_type.casefold() == 'sine':
-        carrier = signal.sin(np.pi*2 * carrier_freq * time_arr)
+        carrier = np.sin(np.pi*2 * carrier_freq * time_arr)
     elif carrier_type.casefold() == 'square':
         carrier = signal.square(2*np.pi * carrier_freq * time_arr)
     elif carrier_type.casefold() == 'saw':
